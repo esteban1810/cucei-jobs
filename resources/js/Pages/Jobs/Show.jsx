@@ -18,6 +18,17 @@ export default function Show() {
       <div className="mt-4 text-sm text-gray-600">
         Empresa: {job.company?.name} • {job.location || 'Ubicación no especificada'} • {job.modality}
       </div>
+      {/* Mensajes Flash */}
+      {flash?.success && (
+        <div className="bg-green-100 text-green-800 p-3 mb-4 rounded">
+          {flash.success}
+        </div>
+      )}
+      {flash?.error && (
+        <div className="bg-red-100 text-red-800 p-3 mb-4 rounded">
+          {flash.error}
+        </div>
+      )}
       {auth?.user && (
         <form onSubmit={apply} className="mt-6">
           <button disabled={processing} className="px-4 py-2 bg-blue-600 text-white rounded">

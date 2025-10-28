@@ -10,13 +10,29 @@ use Illuminate\Http\RedirectResponse;
 
 class ApplicationController extends Controller
 {
-    public function store(Request $request, Job $job): RedirectResponse
+    public function __construct()
     {
         $this->middleware('auth');
+    }
 
+    public function store(Request $request, Job $job): RedirectResponse
+    {
         $data = $request->validate([
             'cover_letter' => 'nullable|string|max:5000',
         ]);
+
+        // Verifica si ya existe una postulación
+        $alreadyApplied = JobApplication::where('user_id', Auth::id())
+            ->where('job_id', $job->id)
+            ->exists();
+
+
+
+        if ($alreadyApplied) {
+            return back()->with('error', 'Ya has aplicado a esta vacante.');
+        }
+
+
 
         JobApplication::create([
             'user_id' => Auth::id(),
