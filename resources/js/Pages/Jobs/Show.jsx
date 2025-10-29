@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useForm, usePage } from '@inertiajs/react';
+import { Link, useForm, usePage, Head } from '@inertiajs/react';
 
 export default function Show() {
   const { job, auth, flash } = usePage().props;
@@ -12,6 +12,7 @@ export default function Show() {
 
   return (
     <div className="container mx-auto p-6">
+      <Head title={job?.title || 'Vacante'} />
       <Link href="/" className="text-blue-600 hover:underline">← Volver</Link>
       <h1 className="text-3xl font-bold mt-2">{job.title}</h1>
       <p className="text-gray-700 mt-2 whitespace-pre-wrap">{job.description}</p>

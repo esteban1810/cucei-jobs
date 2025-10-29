@@ -76,6 +76,12 @@ Compilar UI
 npm run dev
 ```
 
+
+Compilar UI
+```bash
+php artisan serve
+```
+
 Inicia el servicio de postres
 ```bash
 brew services start postgresql

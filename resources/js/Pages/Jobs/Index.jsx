@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, Head } from '@inertiajs/react';
 
 export default function Index() {
-  const { jobs } = usePage().props;
+  const { jobs, title } = usePage().props;
 
   return (
     <div className="container mx-auto p-6">
+      <Head title={title || 'Vacantes'} />
       <h1 className="text-2xl font-bold mb-4">Vacantes</h1>
       <div className="space-y-4">
         {jobs.data.map(job => (
