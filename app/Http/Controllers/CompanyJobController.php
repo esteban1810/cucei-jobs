@@ -7,6 +7,7 @@ use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Services\GeminiService;
 
 class CompanyJobController extends Controller
 {
@@ -39,11 +40,21 @@ class CompanyJobController extends Controller
             'currency' => 'required|string|max:8',
         ]);
 
-        // TODO: autorizar que la company pertenezca al usuario
+        // Verifica que la empresa pertenezca al usuario autenticado
+        $company = Company::where('id', $data['company_id'])->where('user_id', Auth::id())->firstOrFail();
+
+        // Crea la vacante
         $job = Job::create($data);
 
-        // TODO: evaluar riesgo con Gemini y actualizar risk_score/risk_flags
+        // Llama a Gemini para evaluar el riesgo de la vacante
+        $gemini = new GeminiService();
+        $risk = $gemini->assessJobRisk($job->title, $job->description);
 
-        return redirect()->route('company.jobs.index')->with('success', 'Vacante creada');
+        // Actualiza el job con los datos de riesgo
+        $job->risk_score = $risk['risk_score'] ?? null;
+        $job->risk_flags = $risk['risk_flags'] ?? [];
+        $job->save();
+
+        return redirect()->route('company.jobs.index')->with('success', 'Vacante creada y evaluada por IA.');
     }
 }
